@@ -53,51 +53,53 @@ import openpyxl
 # output_path = 'Excel tool/OR and RMT database_to test.xlsx'
 # process_rmt_data(input_path, output_path)
 
-def process_rmt_data(RMT_full_excel,Baseline):
+def process_rmt_data(uploaded_files,Baseline):
     # 读取输入 Excel 文件
-    RMT_full_read_excel = pd.read_excel(RMT_full_excel)
-    RMT_full_list = RMT_full_read_excel.values.tolist()
+    long_df ={}
+    for RMT_full_excel in uploaded_files:
+        RMT_full_read_excel = pd.read_excel(RMT_full_excel)
+        RMT_full_list = RMT_full_read_excel.values.tolist()
 
-    RMT = []
-    switch = 0
-    Project = ''
-    Power = ''
-    Energy = ''
-    RMT_details = []
-    # 解析输入数据
-    for i in RMT_full_list:
-        if 'Project name' in str(i[0]):
-            Project = i[1]
-        elif 'Capacity' in str(i[0]):
-            Capacity = i[1]
-            Power, Energy = Capacity.split('/')
-        if switch == 1:
-            RMT.append(i[2])
-            RMT_details.append(i[3])
-        if 'Requirements' in str(i[2]):
-            switch = 1
+        RMT = []
+        switch = 0
+        Project = ''
+        Power = ''
+        Energy = ''
+        RMT_details = []
+        # 解析输入数据
+        for i in RMT_full_list:
+            if 'Project name' in str(i[0]):
+                Project = i[1]
+            elif 'Capacity' in str(i[0]):
+                Capacity = i[1]
+                Power, Energy = Capacity.split('/')
+            if switch == 1:
+                RMT.append(i[2])
+                RMT_details.append(i[3])
+            if 'Requirements' in str(i[2]):
+                switch = 1
 
-    data = {
-        'Region': [''] * len(RMT),
-        'Project': [Project] * len(RMT),
-        'Power (MW)': [Power] * len(RMT),
-        'Capacity (MWh)': [Energy] * len(RMT),
-        'Product': [''] * len(RMT),
-        'Category': [''] * len(RMT),
-        'RMT': RMT,
-        'RMT details': RMT_details
-    }
+        data = {
+            'Region': [''] * len(RMT),
+            'Project': [Project] * len(RMT),
+            'Power (MW)': [Power] * len(RMT),
+            'Capacity (MWh)': [Energy] * len(RMT),
+            'Product': [''] * len(RMT),
+            'Category': [''] * len(RMT),
+            'RMT': RMT,
+            'RMT details': RMT_details
+        }
 
-    # 创建 DataFrame
-    df = pd.DataFrame(data)
-
+        # 创建 DataFrame
+        df = pd.DataFrame(data)
+        long_df = pd.concat([long_df,df],axis = 1)
     # 读取输出 Excel 文件中的已有数据
     RMT_towrite = pd.read_excel(Baseline, sheet_name='RMT database')
     start_row = RMT_towrite.shape[0]
     output = BytesIO()
     # 将新的数据追加到 Excel 文件中
     with pd.ExcelWriter(Baseline, engine='openpyxl', mode='a', if_sheet_exists='overlay') as writer:
-        df.to_excel(writer, sheet_name='RMT database', startrow=start_row + 1, index=False, header=False)
+        long_df.to_excel(writer, sheet_name='RMT database', startrow=start_row + 1, index=False, header=False)
   
     output.seek(0)
     st.download_button(
@@ -108,11 +110,11 @@ def process_rmt_data(RMT_full_excel,Baseline):
     )
 
 st.title("File Processor")
-uploaded_file = st.file_uploader("Choose the new RMT template")
+uploaded_files = st.file_uploader("Choose the new RMT template",accept_multiple_files=True)
 
 Baseline = st.file_uploader("Choose the baseline to be added")
 
 
-if uploaded_file is not None and Baseline is not None:
-    process_rmt_data(uploaded_file,Baseline)
+if uploaded_files is not None and Baseline is not None:
+    process_rmt_data(uploaded_files,Baseline)
 
