@@ -101,7 +101,7 @@ def process_rmt_data(uploaded_files,Baseline):
 
         # 创建 DataFrame
         df = pd.DataFrame(data)
-        long_df = pd.concat([long_df,df],axis = 1)
+        long_df = pd.concat([long_df,df],axis = 0)
     # 读取输出 Excel 文件中的已有数据
     RMT_towrite = pd.read_excel(Baseline, sheet_name='RMT database')
     start_row = RMT_towrite.shape[0]
