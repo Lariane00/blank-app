@@ -55,7 +55,7 @@ import openpyxl
 
 def process_rmt_data(uploaded_files,Baseline):
     # 读取输入 Excel 文件
-    long_df ={'Region': [''] ,
+    ini_data ={'Region': [''] ,
             'Project': [''],
             'Power (MW)': [''],
             'Capacity (MWh)': [''],
@@ -64,6 +64,7 @@ def process_rmt_data(uploaded_files,Baseline):
             'RMT': [''],
             'RMT details': ['']
         }
+    long_df = pd.DataFrame(ini_data)
     for RMT_full_excel in uploaded_files:
         RMT_full_read_excel = pd.read_excel(RMT_full_excel)
         RMT_full_list = RMT_full_read_excel.values.tolist()
