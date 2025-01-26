@@ -120,9 +120,9 @@ def process_rmt_data(uploaded_files,Baseline):
     )
 
 st.title("File Processor")
-uploaded_files = st.file_uploader("Choose the new RMT template",accept_multiple_files=True)
+uploaded_files = st.file_uploader("Choose the new RMT files",accept_multiple_files=True)
 
-Baseline = st.file_uploader("Choose the baseline to be added")
+Baseline = st.file_uploader("Choose the baseline, tiltes should include Region,Project,Power (MW),Capacity (MWh),Product,Category,RMT,RMT details")
 
 
 if uploaded_files is not None and Baseline is not None:
