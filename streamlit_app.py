@@ -63,7 +63,7 @@ def process_rmt_data(RMT_full_excel,Baseline):
     Project = ''
     Power = ''
     Energy = ''
-
+    RMT_details = []
     # 解析输入数据
     for i in RMT_full_list:
         if 'Project name' in str(i[0]):
@@ -73,6 +73,7 @@ def process_rmt_data(RMT_full_excel,Baseline):
             Power, Energy = Capacity.split('/')
         if switch == 1:
             RMT.append(i[2])
+            RMT_details.append(i[3])
         if 'Requirements' in str(i[2]):
             switch = 1
 
@@ -83,7 +84,8 @@ def process_rmt_data(RMT_full_excel,Baseline):
         'Capacity (MWh)': [Energy] * len(RMT),
         'Product': [''] * len(RMT),
         'Category': [''] * len(RMT),
-        'RMT': RMT
+        'RMT': RMT,
+        'RMT details': RMT_details
     }
 
     # 创建 DataFrame
