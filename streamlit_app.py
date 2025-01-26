@@ -54,12 +54,7 @@ import openpyxl
 # process_rmt_data(input_path, output_path)
 
 def process_rmt_data(uploaded_files,Baseline):
-    Baseline_titles =[]
-    setups = pd.read_excel(Baseline, sheet_name='RMT database')
-    Baseline_full_list = setups.values.tolist()
-    for i in Baseline_full_list[0]:
-        Baseline_titles.append(i)
-    st.write(Baseline_titles)
+    
     # 读取输入 Excel 文件
     ini_data ={'Region': [''] ,
             'Project': [''],
